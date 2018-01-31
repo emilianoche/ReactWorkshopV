@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import store from '../store';
 import Playlist from '../components/Playlist';
 import { fetchPlaylist, addSong } from '../action-creators/playlists';
 import { start } from  '../action-creators/player';

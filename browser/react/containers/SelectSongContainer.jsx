@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import connect from 'react-redux'
 import SelectSong from '../components/SelectSong';
-import store from '../store';
 import { fetchSongs } from '../action-creators/songs';
 
 export default class SelectSongContainer extends React.Component {
