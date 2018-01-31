@@ -18,8 +18,8 @@ import { fetchPlaylist } from '../action-creators/playlists';
 
 const onStationsEnter = () => store.dispatch(fetchSongs());
 
-const onPlaylistEnter = () => {
-  store.dispatch(fetchPlaylist());
+const onPlaylistEnter = ({ match }) => {
+  store.dispatch(fetchPlaylist(match.params.id));
   store.dispatch(fetchSongs());
 }
 

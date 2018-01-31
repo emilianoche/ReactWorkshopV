@@ -1,48 +1,20 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import store from '../store';
 import Playlist from '../components/Playlist';
 import { fetchPlaylist, addSong } from '../action-creators/playlists';
 import { start } from  '../action-creators/player';
+import { fetchSongs } from '../action-creators/songs';
 
-export default class PlaylistContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = store.getState();
-  }
-  componentDidMount() {
-    this.unsubscribe = store.subscribe(() => {
-      this.setState(store.getState());
-    });
-    this.fetchPlaylist(this.props.match.params.id);
-  }
-  
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.id !== this.props.match.params.id) {
-      this.fetchPlaylist(nextProps.match.params.id);
-    }
-  }
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-  fetchPlaylist(id) {
-    store.dispatch(fetchPlaylist(id));
-  }
+const mapStateToProps = ({ songs, player, playlists }) => ({
+  playlist: playlists.selected,
+  currentSong: player.currentSong,
+  songs,
+});
 
-  start(song) {
-    store.dispatch(start(song));
-  }
+const mapDispatchToProps = (dispatch) => ({
+  addSong: (song) => dispatch(addSong(song)),
+  start: (song, list) => dispatch(start(song, list)),
+})
 
-  addSong() {
-    return store.dispatch(addSong());
-  }
-  render() {
-    return (
-      <Playlist
-        playlist={this.state.playlists.selected}
-        start={this.start}
-        currentSong={this.state.player.currentSong}
-        addSong={this.addSong}
-      />
-    );
-  }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(Playlist)
