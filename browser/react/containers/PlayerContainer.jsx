@@ -1,5 +1,5 @@
 import React from 'react';
-import store from '../store';
+import { connect } from 'react-redux';
 import Player from '../components/Player';
 import { play, pause, next, previous } from '../action-creators/player';
 
@@ -49,3 +49,14 @@ export default class PlayerContainer extends React.Component {
     );
   }
 }
+
+const mapStateToProps = ({ player }) => ({ ...player });
+
+const mapDispatchToProps = (dispatch) => ({
+  play: () => dispatch(play()),
+  pause: () => dispatch(pause()),
+  next: () => dispatch(next()),
+  previous: () => dispatch(previous()),
+});
+
+connect(mapStateToProps, mapDispatchToProps)(Player);
