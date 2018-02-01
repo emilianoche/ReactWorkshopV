@@ -1,36 +1,15 @@
 import React from 'react';
-import store from '../store';
-import { start } from '../action-creators/player'
-import { fetchAlbum } from '../action-creators/albums';
+import { connect } from 'react-redux';
+import { start } from '../action-creators/player';
 import SingleAlbum from '../components/SingleAlbum';
 
-export default class AlbumsContainer extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = store.getState();
-  }
+const mapStateToProps = ({ player, albums }) => ({
+  album: albums.selected,
+  currentSong: player.currentSong,
+});
 
-  componentDidMount() {
-    this.unsubscribe = store.subscribe(() => {
-      this.setState(store.getState());
-    });
-    store.dispatch(fetchAlbum(this.props.match.params.id));
-  }
+const mapDispatchToProps = (dispatch) => ({
+  start: (song, list) => dispatch(start(song, list))
+})
 
-  componentWillUnmount(){
-    this.unsubscribe();
-  }
-  start(song, list) {
-    store.dispatch(start(song, list));
-  }
-
-  render () {
-    return (
-      <SingleAlbum 
-        currentSong={this.state.player.currentSong}
-        start={this.start}
-        album={this.state.albums.selected} 
-      />
-    );
-  }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(SingleAlbum);

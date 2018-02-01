@@ -1,10 +1,9 @@
 import React from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import NewPlaylist from '../components/NewPlaylist';
-import store from '../store';
 import { createPlaylist } from '../action-creators/playlists';
 
-export default class NewPlaylistContainer extends React.Component {
+class NewPlaylistContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +33,7 @@ export default class NewPlaylistContainer extends React.Component {
   }
 
   addPlaylist(name) {
-    store.dispatch(createPlaylist(name))
+    this.props.createPlaylist(name)
       .then((id) => this.props.history.push(`/playlists/${id}`))
   }
 
@@ -51,3 +50,9 @@ export default class NewPlaylistContainer extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  createPlaylist: name => dispatch(createPlaylist(name)), 
+})
+
+export default connect(null, mapDispatchToProps)(NewPlaylistContainer);

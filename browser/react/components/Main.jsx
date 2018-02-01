@@ -15,6 +15,8 @@ import StationContainer from '../containers/StationContainer';
 import store from '../store';
 import { fetchSongs } from '../action-creators/songs';
 import { fetchPlaylist } from '../action-creators/playlists';
+import { fetchArtists, fetchArtist } from '../action-creators/artists';
+import { fetchAlbums, fetchAlbum } from '../action-creators/albums';
 
 const onStationsEnter = () => store.dispatch(fetchSongs());
 
@@ -23,22 +25,32 @@ const onPlaylistEnter = ({ match }) => {
   store.dispatch(fetchSongs());
 }
 
+const onPlaylistChange = ({ match }) => store.dispatch(fetchPlaylist(match.params.id));
+
+const onArtistsEnter = () => store.dispatch(fetchArtists());
+
+const onArtistEnter = ({ match }) => store.dispatch(fetchArtist(match.params.id));
+
+const onAlbumsEnter = () => store.dispatch(fetchAlbums());
+
+const onAlbumEnter = ({ match }) => store.dispatch(fetchAlbum(match.params.id));
+
 export default () => (
   <div id="main" className="container-fluid">
     <SidebarContainer />
     <div className="col-xs-10">
-      <Switch>
-        <Route exact path="/albums" component={AlbumsContainer} />
-        <Route path="/albums/:id" component={AlbumContainer} />
-        <Route path="/artists" exact component={FilterableArtistsContainer} />
-        <Route path="/artists/:id" component={ArtistContainer} />
+    <Switch>
+        <RouteHook exact path="/albums" component={AlbumsContainer} onEnter={onAlbumsEnter} />
+        <RouteHook path="/albums/:id" component={AlbumContainer} onEnter={onAlbumEnter} />
+        <RouteHook path="/artists" exact component={FilterableArtistsContainer} onEnter={onArtistsEnter} />
+        <RouteHook path="/artists/:id" component={ArtistContainer} onEnter={onArtistEnter} />
         <Route path="/playlists/new" component={NewPlaylistContainer} />
-        <RouteHook path="/playlists/:id" component={PlaylistContainer} onEnter={onPlaylistEnter} />
+        <RouteHook path="/playlists/:id" component={PlaylistContainer} onEnter={onPlaylistEnter} onChange={onPlaylistChange} />
         <Route path="/lyrics" component={LyricsContainer} />
         <RouteHook exact path="/stations" component={StationsContainer} onEnter={onStationsEnter} />
         <RouteHook path="/stations/:genreName" component={StationContainer} onEnter={onStationsEnter} />
-        <Redirect from="/" to="/albums" />
-      </Switch>
+        <Redirect exact from="/" to="/albums" />
+      </Switch> 
     </div>
     <PlayerContainer />
   </div>
